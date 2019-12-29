@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+     
+        #game{
+            width:1000px;
+            margin:auto;
+        }
+
+        .card{
+            width:120px;
+            height:200px;
+            /*設定子元素在3D空間內*/
+            transform-style:preserve-3d;
+            position: relative;
+            transition: transform 0.5s;
+            float:left;
+            margin:10px;
+            top:150px;
+        }
+        
+        .open{
+            transform: rotateY(180deg);
+        }
+
+        .front{
+            width:100%;
+            height:100%;
+            background-image: url(./card/back.png);
+            background-position: center;
+            background-size:contain;
+            background-repeat: no-repeat;
+            position: absolute;
+        }
+
+        .back{
+            width:100%;
+            height:100%;
+            background-color: white;
+            background-position: center;
+            background-size:contain;
+            background-repeat: no-repeat;
+            position: absolute;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div id ="game"></div>
+    <script src="./jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+            //產生14張卡片
+            for(let i=0;i<14;i++){
+                $("#game").append(/*html*/`<div class="card">
+                    <div class="front"></div>
+                    <div class="back"></div>
+                    </div>
+                `)
+            }
+              
+            for(let i=0;i<$(".card").length;i++){
+                /*
+                   每個花色要有兩個才能消除
+                   以16張牌來說，就有8個數字
+                   以 i/8 的餘數來判斷要加哪張牌
+                   因為牌號從1開始，所以要加1
+                */
+                let add = i % ($(".card").length/2)+1;
+                $(".card").eq(i).find(".back").css("background-image",`url(./card/${add}D.jpg)`);
+                $(".card").eq(i).attr("data-card",add);
+
+                // 隨機取一張牌，將他放在目前迴圈跑到的牌後
+                let target = Math.floor(Math.random()*$(".card").length);               
+                $(".card").eq(target).insertAfter($(".card").eq(i));
+            }
+            
+            $(".card").on("click",function(){
+                //如果翻開的牌小於兩張，且這張還沒翻開
+                if($(".open").length <2 && !$(this).hasClass("open")){
+                    $(this).addClass("open");
+                }
+                
+                //如果翻開兩張了
+                if($(".open").length==2){
+                    //一秒後翻回來
+                    setTimeout(() => {
+                        $(".open").removeClass("open");
+                    },1000)
+                    
+                    //如果兩張一樣，淡出
+                    if($(".open").eq(0).attr("data-card")==$(".open").eq(1).attr("data-card")){
+                        $(".open").fadeTo(1000,0).addClass("clear");
+                    }
+
+                    //如果全部都 clear
+                    if($(".clear").length==$(".card").length){
+                        setTimeout(() => {
+                            Response.Write(alert('恭喜通關!'),location.href='index.html')
+                       },1000);                       
+                    }
+                }              
+            })
+        })
+    
+    </script>
+</body>
+</html>
