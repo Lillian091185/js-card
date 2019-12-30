@@ -6,22 +6,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-     
+        
+        body{
+            background-image:url(./card/bg.jpg);
+            background-size: cover;
+        }
+
         #game{
             width:1000px;
             margin:auto;
+            display: none;
         }
 
         .card{
             width:120px;
-            height:200px;
+            height:175px;
             /*設定子元素在3D空間內*/
             transform-style:preserve-3d;
             position: relative;
             transition: transform 0.5s;
             float:left;
             margin:10px;
-            top:150px;
+            top:200px;
+            left:50px;
+            
         }
         
         .open{
@@ -42,16 +50,40 @@
             width:100%;
             height:100%;
             background-color: white;
+            opacity: 0.9;
             background-position: center;
             background-size:contain;
             background-repeat: no-repeat;
             position: absolute;
             transform: rotateY(180deg);
         }
+
+        .opacity{
+            opacity: 0.3;
+            transition:0.5s;
+        }
+
+        #cheat{
+            width:50px;
+            height:50px;
+            background-image:url(./card/eye.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        input{
+            background: white;
+            border-radius: 50%;
+            position:fixed;
+            top:70%;  
+            box-shadow: 0 0 5px 3px gray;        
+        }
+
     </style>
 </head>
 <body>
     <div id ="game"></div>
+    <input type="button" id="cheat">
+
     <script src="./jquery-3.4.1.min.js"></script>
     <script>
         $(function(){
@@ -62,6 +94,7 @@
                     <div class="back"></div>
                     </div>
                 `)
+                $("#game").fadeIn(1000);
             }
               
             for(let i=0;i<$(".card").length;i++){
@@ -101,10 +134,16 @@
                     //如果全部都 clear
                     if($(".clear").length==$(".card").length){
                         setTimeout(() => {
-                            Response.Write(alert('恭喜通關!'),location.href='index.html')
+                            response.Write(alert('恭喜通關!'),location.href='index.html')
                        },1000);                       
                     }
                 }              
+            })
+            $("#cheat").on("click",function(){
+                $(".front").addClass("opacity")
+                 setTimeout(() => {
+                     $(".front").removeClass("opacity") 
+                 },1500)       
             })
         })
     
